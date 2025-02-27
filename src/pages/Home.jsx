@@ -12,8 +12,6 @@ import axios from '../axios';
 
 const Home = () => {
   const [isrc, setIsrc] = useState('');
-  const [metadata, setMetadata] = useState();
-  const [cover, setCover] = useState();
 
   const navigate = useNavigate();
   const tracks = useSelector((state) => state.tracks);
@@ -60,16 +58,6 @@ const Home = () => {
       console.error(error);
       handleOpen('danger');
     }
-  };
-
-  const getCover = async () => {
-    const response = await axios.get(`/cover/${isrc}`);
-    setCover(response.data);
-  };
-
-  const getTrackMetadata = async () => {
-    const response = await axios.get(`/getTrackMetadata/${isrc}`);
-    setMetadata(response.data);
   };
 
   const showDetails = (isrc) => navigate(`/track/${isrc}`);
