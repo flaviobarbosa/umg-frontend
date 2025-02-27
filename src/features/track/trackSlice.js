@@ -5,7 +5,8 @@ export const trackSlice = createSlice({
   initialState: [],
   reducers: {
     add: (state, action) => {
-      state.push(action.payload);
+      let index = state.findIndex((item) => item.id === action.payload.id);
+      if (index < 0) state.push(action.payload);
     },
   },
 });
