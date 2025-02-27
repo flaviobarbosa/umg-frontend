@@ -26,8 +26,17 @@ const Home = () => {
     color: 'primary',
   });
 
+  const loadAllMetadata = async () => {
+    try {
+      const response = await axios.get(`/getAllTrackMetadata`);
+      response.data.forEach(({ id, isrc }) => dispatch(add({ id, isrc })));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    console.log(tracks);
+    loadAllMetadata();
   }, []);
 
   const { vertical, horizontal, open } = snackbarState;
