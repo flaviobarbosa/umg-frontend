@@ -1,5 +1,9 @@
+import { useParams } from 'react-router-dom';
+
 const Track = () => {
-  return <h1>Track</h1>;
+  const { isrc } = useParams();
+
+  return <h1>Track for {isrc}</h1>;
 };
 
 export default Track;

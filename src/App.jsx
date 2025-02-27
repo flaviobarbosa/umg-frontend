@@ -6,7 +6,7 @@ function App() {
   return (
     <Routes>
       <Route index element={<Home />} />
-      <Route path='track' element={<Track />} />
+      <Route path='track/:isrc' element={<Track />} />
     </Routes>
   );
 }
