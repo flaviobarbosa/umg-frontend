@@ -6,14 +6,14 @@ import Button from '@mui/joy/Button';
 import Input from '@mui/joy/Input';
 import Snackbar from '@mui/joy/Snackbar';
 import Grid from '@mui/joy/Grid';
+import Typography from '@mui/joy/Typography';
 
 import axios from '../axios';
 import TrackList from '../components/TrackList';
 
 const Home = () => {
   const [isrc, setIsrc] = useState('');
-
-  const dispatch = useDispatch();
+  const [snackbarMessage, setSnackbarMessage] = useState();
 
   const [snackbarState, setSnackbarState] = useState({
     open: false,
@@ -22,9 +22,14 @@ const Home = () => {
     color: 'primary',
   });
 
+  const dispatch = useDispatch();
+
   const { vertical, horizontal, open } = snackbarState;
 
   const handleOpen = (action) => {
+    if (action === 'success') setSnackbarMessage('✅ Track successfully created');
+    else setSnackbarMessage('❌ Could not create Track');
+
     setSnackbarState({ ...snackbarState, open: true, color: action });
   };
 
@@ -51,24 +56,37 @@ const Home = () => {
         autoHideDuration={5000}
         open={open}
         onClose={handleClose}
-        variant='solid'
+        variant='soft'
         key={vertical + horizontal}
         color={snackbarState.color}>
-        {snackbarState.color === 'primary'
-          ? 'Track successfully created ☑️'
-          : 'Could not create Track'}
+        {snackbarMessage}
       </Snackbar>
+
+      <Typography level='h2'>Track Metadata</Typography>
       <Grid
         container
-        direction='column'
+        direction='row'
+        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         sx={{
           justifyContent: 'center',
           alignItems: 'center',
+          mt: 3,
+          mb: 3,
         }}>
-        <Input placeholder='Type the ISCR' value={isrc} onChange={(e) => setIsrc(e.target.value)} />
-        <Button onClick={createTrack}>Create</Button>
+        <Grid item>
+          <Input
+            placeholder='Type the ISCR'
+            value={isrc}
+            onChange={(e) => setIsrc(e.target.value)}
+          />
+        </Grid>
+        <Grid item>
+          <Button onClick={createTrack}>Create</Button>
+        </Grid>
       </Grid>
-      <TrackList />
+      <Grid item>
+        <TrackList />
+      </Grid>
     </>
   );
 };
