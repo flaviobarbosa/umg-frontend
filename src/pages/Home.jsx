@@ -99,27 +99,6 @@ const Home = () => {
         <Button onClick={createTrack}>Create</Button>
       </Grid>
 
-      <Grid
-        container
-        direction='column'
-        sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Button onClick={getTrackMetadata}>Get metadata</Button>
-        {metadata && <pre>{JSON.stringify(metadata, null, 2)}</pre>}
-      </Grid>
-
-      <Grid
-        container
-        direction='column'
-        sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Button onClick={getCover}>Get cover</Button>
-        {cover && <img src={'http://localhost:8080/codechallenge/cover/USMC18620549'} alt='' />}
-      </Grid>
       {tracks.length <= 0 ? (
         <p>No tracks added</p>
       ) : (
