@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { add } from '../features/track/trackSlice';
+import { useNavigate } from 'react-router-dom';
 import '../App.css';
 import Button from '@mui/joy/Button';
 import Input from '@mui/joy/Input';
@@ -12,12 +15,20 @@ const Home = () => {
   const [metadata, setMetadata] = useState();
   const [cover, setCover] = useState();
 
+  const navigate = useNavigate();
+  const tracks = useSelector((state) => state.tracks);
+  const dispatch = useDispatch();
+
   const [snackbarState, setSnackbarState] = useState({
     open: false,
     vertical: 'top',
     horizontal: 'right',
     color: 'primary',
   });
+
+  useEffect(() => {
+    console.log(tracks);
+  }, []);
 
   const { vertical, horizontal, open } = snackbarState;
 
@@ -32,6 +43,8 @@ const Home = () => {
   const createTrack = async () => {
     try {
       const response = await axios.post(`/createTrack?isrc=${isrc}`);
+      console.log(response.data);
+      dispatch(add(response.data));
       handleOpen('success');
     } catch (error) {
       console.error(error);
@@ -48,6 +61,8 @@ const Home = () => {
     const response = await axios.get(`/getTrackMetadata/${isrc}`);
     setMetadata(response.data);
   };
+
+  const showDetails = (isrc) => navigate(`/track/${isrc}`);
 
   return (
     <>
@@ -95,6 +110,17 @@ const Home = () => {
         <Button onClick={getCover}>Get cover</Button>
         {cover && <img src={'http://localhost:8080/codechallenge/cover/USMC18620549'} alt='' />}
       </Grid>
+      {tracks.length <= 0 ? (
+        <p>No tracks added</p>
+      ) : (
+        <>
+          {tracks.map((track) => (
+            <li key={track.id} onClick={() => showDetails(track.isrc)}>
+              {track.isrc}
+            </li>
+          ))}
+        </>
+      )}
     </>
   );
 };
