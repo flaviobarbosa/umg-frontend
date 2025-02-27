@@ -1,19 +1,42 @@
 import { useState } from 'react';
 import '../App.css';
 import Button from '@mui/joy/Button';
+import Input from '@mui/joy/Input';
+import Snackbar from '@mui/joy/Snackbar';
 import Grid from '@mui/joy/Grid';
 
 import axios from '../axios';
-import { Input } from '@mui/joy';
 
 const Home = () => {
   const [isrc, setIsrc] = useState('');
   const [metadata, setMetadata] = useState();
   const [cover, setCover] = useState();
 
+  const [snackbarState, setSnackbarState] = useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'right',
+    color: 'primary',
+  });
+
+  const { vertical, horizontal, open } = snackbarState;
+
+  const handleOpen = (action) => {
+    setSnackbarState({ ...snackbarState, open: true, color: action });
+  };
+
+  const handleClose = () => {
+    setSnackbarState({ ...snackbarState, open: false });
+  };
+
   const createTrack = async () => {
-    const response = await axios.post(`/createTrack?isrc=${isrc}`);
-    console.log(response);
+    try {
+      const response = await axios.post(`/createTrack?isrc=${isrc}`);
+      handleOpen('success');
+    } catch (error) {
+      console.error(error);
+      handleOpen('danger');
+    }
   };
 
   const getCover = async () => {
@@ -25,8 +48,21 @@ const Home = () => {
     const response = await axios.get(`/getTrackMetadata/${isrc}`);
     setMetadata(response.data);
   };
+
   return (
     <>
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        autoHideDuration={5000}
+        open={open}
+        onClose={handleClose}
+        variant='solid'
+        key={vertical + horizontal}
+        color={snackbarState.color}>
+        {snackbarState.color === 'primary'
+          ? 'Track successfully created ☑️'
+          : 'Could not create Track'}
+      </Snackbar>
       <Grid
         container
         direction='column'
