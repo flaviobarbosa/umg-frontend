@@ -44,7 +44,8 @@ const Home = () => {
     try {
       const response = await axios.post(`/createTrack?isrc=${isrc}`);
       console.log(response.data);
-      dispatch(add(response.data));
+      const { id } = response.data;
+      dispatch(add({ id, isrc }));
       handleOpen('success');
     } catch (error) {
       console.error(error);
