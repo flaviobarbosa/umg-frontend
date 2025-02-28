@@ -4,7 +4,6 @@ import { add } from '../features/track/trackSlice';
 import '../App.css';
 import Button from '@mui/joy/Button';
 import Input from '@mui/joy/Input';
-import Snackbar from '@mui/joy/Snackbar';
 import Grid from '@mui/joy/Grid';
 import Typography from '@mui/joy/Typography';
 
@@ -12,59 +11,28 @@ import axios from '../axios';
 import TrackList from '../components/TrackList';
 import { useNavigate } from 'react-router-dom';
 
-const Home = () => {
+const Home = (props) => {
   const [isrc, setIsrc] = useState('');
-  const [snackbarMessage, setSnackbarMessage] = useState();
-
-  const [snackbarState, setSnackbarState] = useState({
-    open: false,
-    vertical: 'top',
-    horizontal: 'right',
-    color: 'primary',
-  });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { vertical, horizontal, open } = snackbarState;
-
-  const handleOpen = (action) => {
-    if (action === 'success') setSnackbarMessage('✅ Track successfully created');
-    else setSnackbarMessage('❌ Could not create Track');
-
-    setSnackbarState({ ...snackbarState, open: true, color: action });
-  };
-
-  const handleClose = () => {
-    setSnackbarState({ ...snackbarState, open: false });
-  };
 
   const createTrack = async () => {
     try {
       const response = await axios.post(`/createTrack?isrc=${isrc}`);
       const { id } = response.data;
+      props.handleOpen('success');
       dispatch(add({ id, isrc }));
-      handleOpen('success');
       navigate(`/track/${isrc}`);
+      setIsrc('');
     } catch (error) {
       console.error(error);
-      handleOpen('danger');
+      props.handleOpen('danger');
     }
   };
 
   return (
     <>
-      <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        autoHideDuration={5000}
-        open={open}
-        onClose={handleClose}
-        variant='soft'
-        key={vertical + horizontal}
-        color={snackbarState.color}>
-        {snackbarMessage}
-      </Snackbar>
-
       <Typography level='h2'>Track Metadata</Typography>
       <Grid
         container
