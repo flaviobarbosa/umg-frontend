@@ -3,7 +3,7 @@ import axios from '../axios';
 import { useEffect, useState } from 'react';
 
 import Button from '@mui/joy/Button';
-import { AspectRatio, Box, Card, CardContent, Grid, Typography } from '@mui/joy';
+import { Box, Card, Grid, Typography } from '@mui/joy';
 
 const Track = () => {
   const { isrc } = useParams();
@@ -16,7 +16,6 @@ const Track = () => {
     try {
       const response = await axios.get(`/getTrackMetadata/${isrc}`);
       setTrack(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
