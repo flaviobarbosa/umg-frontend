@@ -10,6 +10,7 @@ import Typography from '@mui/joy/Typography';
 
 import axios from '../axios';
 import TrackList from '../components/TrackList';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [isrc, setIsrc] = useState('');
@@ -23,6 +24,7 @@ const Home = () => {
   });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { vertical, horizontal, open } = snackbarState;
 
@@ -43,6 +45,7 @@ const Home = () => {
       const { id } = response.data;
       dispatch(add({ id, isrc }));
       handleOpen('success');
+      navigate(`/track/${isrc}`);
     } catch (error) {
       console.error(error);
       handleOpen('danger');
